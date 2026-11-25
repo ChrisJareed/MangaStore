@@ -1,0 +1,22 @@
+{
+  "name": "mangastore-web-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Demostración local de MongoDB para MangaStore EP3",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "preparar-demo": "node --env-file-if-exists=.env scripts/preparar-demo.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongodb": "^6.17.0"
+  },
+  "devDependencies": {
+    "linkedom": "^0.18.15"
+  }
+}
