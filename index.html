@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#181c32">
+  <meta name="description" content="Gestiona el catálogo, los clientes y las consultas de ventas de MangaStore.">
+  <title>MangaStore · Catálogo</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Ir al contenido</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Menú principal">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a3 3 0 0 0-2 1 3 3 0 0 0-2-1H4zM12 5v15M7 8h2M15 8h2M7 12h2M15 12h2"/></svg></span>
+        <div><span class="brand-name">MangaStore<span>.</span></span><span class="brand-description">Tu tienda, en orden.</span></div>
+      </div>
+      <p class="nav-label">ESPACIO DE TRABAJO</p>
+      <nav class="navigation" aria-label="Secciones de la tienda">
+        <button class="nav-item active" type="button" data-view="mangas" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="13" height="18" rx="2"/><path d="M8 3v18M11 7h3M11 11h3M20 6v13a2 2 0 0 1-2 2"/></svg><span>Mangas</span><span class="nav-count" id="nav-mangas-count">—</span></button>
+        <button class="nav-item" type="button" data-view="clientes"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/></svg><span>Clientes</span><span class="nav-count" id="nav-clientes-count">—</span></button>
+        <button class="nav-item" type="button" data-view="ventas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3"/></svg><span>Ventas</span><span class="nav-count" id="nav-ventas-count">—</span></button>
+      </nav>
+      <div class="sidebar-footer"><span class="demo-label">DEMOSTRACIÓN LOCAL</span><p>Historias en las estanterías.<br>Todo lo demás, aquí.</p><span class="sidebar-version">MangaStore · EP3</span></div>
+    </aside>
+    <div class="workspace">
+      <header class="topbar">
+        <div class="breadcrumb"><span>MangaStore</span><span aria-hidden="true">/</span><strong id="breadcrumb-view">Catálogo</strong></div>
+        <div class="connection" id="connection-status" data-status="loading"><span class="status-dot" aria-hidden="true"></span><span id="connection-text" role="status">Conectando…</span></div>
+      </header>
+      <main id="main-content" tabindex="-1">
+        <div class="page-heading"><div><p class="eyebrow">GESTIÓN DE LA TIENDA</p><h1 id="page-title">Catálogo de mangas</h1><p id="page-description">Encuentra cada tomo y revisa su disponibilidad.</p></div><span class="workspace-badge">Panel de administración</span></div>
+        <div id="system-alert" class="system-alert" role="status" hidden><div><strong id="system-alert-title"></strong><p id="system-alert-text"></p></div><button id="retry-connection" class="button button-secondary" type="button">Reintentar</button></div>
+        <section class="summary-grid" aria-label="Resumen de la tienda">
+          <div class="summary-card"><span class="summary-icon violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v15h-6a3 3 0 0 0-2 1 3 3 0 0 0-2-1H4zM12 5v15"/></svg></span><div><p>Tomos en catálogo</p><strong id="summary-mangas">—</strong></div></div>
+          <div class="summary-card"><span class="summary-icon blue" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M18 14a5 5 0 0 1 3 4v2"/></svg></span><div><p>Clientes registrados</p><strong id="summary-clientes">—</strong></div></div>
+          <div class="summary-card"><span class="summary-icon green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg></span><div><p>Ventas registradas</p><strong id="summary-ventas">—</strong></div></div>
+        </section>
+        <section id="view-mangas" class="panel" aria-labelledby="catalog-title">
+          <div class="panel-heading"><div><h2 id="catalog-title">Todos los tomos</h2><p>El catálogo completo, en un solo lugar.</p></div><span id="manga-results" class="result-count" aria-live="polite">Cargando…</span></div>
+          <form id="manga-search-form" class="toolbar">
+            <div class="search-control"><label class="sr-only" for="manga-search">Buscar manga por título</label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="manga-search" type="search" maxlength="100" placeholder="Buscar un título…" autocomplete="off"></div>
+            <button type="submit" class="button button-primary">Buscar</button>
+            <button type="button" class="button button-filter" id="critical-filter" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 10 18H2zM12 9v5M12 17h.01"/></svg><span>Stock crítico</span><span class="filter-count" id="critical-count">—</span></button>
+          </form>
+          <div id="manga-list" class="table-wrap" aria-live="polite"></div>
+          <div class="panel-footer"><span class="legend"><span class="legend-dot" aria-hidden="true"></span>Stock crítico: menos de 3 unidades.</span><span>Precios en pesos chilenos</span></div>
+        </section>
+        <section id="view-clientes" class="panel" aria-labelledby="clients-title" hidden>
+          <div class="panel-heading"><div><h2 id="clients-title">Tus clientes</h2><p>Consulta sus datos y gestiona los contactos de prueba.</p></div><button type="button" id="new-client" class="button button-primary"><span class="plus" aria-hidden="true">+</span> Nuevo cliente</button></div>
+          <form id="client-search-form" class="toolbar"><div class="search-control"><label class="sr-only" for="client-search">Buscar cliente por nombre o correo</label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="client-search" type="search" maxlength="100" placeholder="Buscar por nombre o correo…" autocomplete="off"></div><button type="submit" class="button button-secondary">Buscar</button><span id="client-results" class="result-count toolbar-count" aria-live="polite"></span></form>
+          <div class="table-wrap"><table><caption class="sr-only">Clientes registrados</caption><thead><tr><th scope="col">ID</th><th scope="col">Nombre</th><th scope="col">Apellido</th><th scope="col">Correo</th><th scope="col">Teléfono</th><th scope="col">Acciones</th></tr></thead><tbody id="client-list"></tbody></table></div>
+          <div class="panel-footer note"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 14v3"/></svg><span>Los clientes de muestra son de solo consulta. Los nuevos clientes usan un ID desde 9900.</span></div>
+        </section>
+        <section id="view-ventas" class="sales-view" aria-labelledby="sales-title" hidden>
+          <div class="panel sale-search-panel"><div class="panel-heading"><div><h2 id="sales-title">Busca un comprobante</h2><p>Revisa el detalle de una compra por su número de venta.</p></div><span class="section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"/></svg></span></div>
+            <form id="sale-search-form" class="sale-form"><div class="field"><label for="sale-folio">Número de venta</label><input id="sale-folio" type="number" min="1" step="1" value="1001" placeholder="Ej. 1001" required></div><button type="submit" class="button button-primary">Consultar venta</button></form>
+            <div class="sale-hint"><span>Folios de muestra: <strong>1001</strong> y <strong>1002</strong>.</span><span>Esta consulta no modifica el stock.</span></div>
+          </div>
+          <div id="sale-result" aria-live="polite"><div class="sale-placeholder"><span class="placeholder-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6M9 16h3"/></svg></span><h3>El detalle de la compra aparecerá aquí</h3><p>Ingresa un folio para ver sus productos, cantidades y total.</p></div></div>
+        </section>
+        <footer class="workspace-footer"><span>MangaStore</span><span>Catálogo, clientes y ventas. Todo en su lugar.</span></footer>
+      </main>
+    </div>
+  </div>
+  <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
+  <dialog id="client-dialog" class="modal"><form id="client-form">
+    <div class="modal-heading"><div><p class="eyebrow">CONTACTOS DE LA TIENDA</p><h2 id="client-dialog-title">Nuevo cliente</h2></div><button class="icon-button" type="button" data-close="client-dialog" aria-label="Cerrar formulario">×</button></div>
+    <p class="modal-description">Completa los datos del cliente. El teléfono es opcional.</p>
+    <div class="form-grid">
+      <div class="field full-width"><label for="client-id">ID del cliente</label><input id="client-id" name="_id" type="number" min="9900" step="1" required><span class="field-hint">Identificador de prueba desde 9900.</span></div>
+      <div class="field"><label for="client-name">Nombre</label><input id="client-name" name="nombre" type="text" maxlength="50" autocomplete="given-name" required></div>
+      <div class="field"><label for="client-lastname">Apellido</label><input id="client-lastname" name="apellido" type="text" maxlength="50" autocomplete="family-name" required></div>
+      <div class="field full-width"><label for="client-email">Correo electrónico</label><input id="client-email" name="correo" type="email" maxlength="100" autocomplete="email" placeholder="cliente@ejemplo.cl" required></div>
+      <div class="field full-width"><label for="client-phone">Teléfono <span class="optional">(opcional)</span></label><input id="client-phone" name="telefono" type="tel" maxlength="20" autocomplete="tel" placeholder="Ej. 912345678"></div>
+    </div>
+    <p id="client-form-error" class="form-error" role="alert" hidden></p>
+    <div class="modal-actions"><button type="button" id="cancel-client" class="button button-secondary">Cancelar</button><button type="submit" id="save-client" class="button button-primary">Crear cliente</button></div>
+  </form></dialog>
+  <dialog id="delete-dialog" class="modal modal-small"><form id="delete-form">
+    <div class="modal-heading"><span class="delete-symbol" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></span><button class="icon-button" type="button" data-close="delete-dialog" aria-label="Cerrar confirmación">×</button></div>
+    <h2>¿Eliminar este cliente?</h2><p id="delete-description" class="delete-description"></p><p class="modal-description">Esta acción no se puede deshacer. Solo se eliminará si no tiene ventas asociadas.</p><p id="delete-error" class="form-error" role="alert" hidden></p>
+    <div class="modal-actions"><button type="button" id="cancel-delete" class="button button-secondary">Cancelar</button><button type="submit" id="confirm-delete" class="button button-danger">Eliminar cliente</button></div>
+  </form></dialog>
+</body>
+</html>
